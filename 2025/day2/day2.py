@@ -41,8 +41,6 @@ for range_ids in list_ids:
         if repeated_pattern(value):
             fake_ids.append(value)
 
-
-
 print(sum(fake_ids))
 
 breakpoint()
