@@ -1,7 +1,7 @@
 from collections import defaultdict, deque
 import math
 
-with open("2025/day8/input.txt") as f:
+with open("2025/day8/test.txt") as f:
     input = [[int(c) for c in x.split(",")] for x in f.read().split('\n')]
 
 def dist(A:list, B:list): 
@@ -18,45 +18,93 @@ for i,x in enumerate(input):
         mp[(i,j)] = dist(x,y)
 
 
-print("distances calculated")
+# print("distances calculated")
+# connections = []
+# for _ in range(10):
+#     min_connection = min(mp, key=mp.get)
+#     connections.append(min_connection)
+#     del mp[min_connection]
+#     print(_)
+
+
+# print("connections calculated")
+
+# # Build adjacency list (undirected)
+# adj = defaultdict(set)
+# for a, b in connections:
+#     adj[a].add(b)
+#     adj[b].add(a)
+
+# visited = set()
+# circuits = []
+# print("starting BFS calculated")
+
+# for node in adj:
+#     if node not in visited:
+#         comp = []
+#         q = deque([node])
+#         visited.add(node)
+
+#         while q:
+#             cur = q.popleft()
+#             comp.append(cur)
+#             for nxt in adj[cur]:
+#                 if nxt not in visited:
+#                     visited.add(nxt)
+#                     q.append(nxt)
+
+#         circuits.append(sorted(comp))
+
+
+# t = sorted([len(x) for x in circuits], reverse=True)[:3]
+# print(math.prod(t))
+
+
+# Not finished while the max length of a circuit is not the length of the input
+
+
+parent = {}
+
+def find(x):
+    parent.setdefault(x, x)
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
+
+def union(a, b):
+    pa, pb = find(a), find(b)
+    if pa != pb:
+        parent[pb] = pa   
+
+
+indexes = set(range(len(input)))
 connections = []
-for _ in range(1000):
+circuits_max_length = 0
+while True:
+    # Find the next connection
+    
+    if len(mp) == 0:
+        print("DISTANCES EMPTY")
+        break
+
     min_connection = min(mp, key=mp.get)
     connections.append(min_connection)
+    last_connection = min_connection
     del mp[min_connection]
-    print(_)
+
+    # Add connection to the parent set of connections
+    union(min_connection[0], min_connection[1])
+    groups = {find(x) for x in parent}
 
 
-print("connections calculated")
+    #  Check current list of indexes used
+    all_in_connections = {x for pair in connections for x in pair}
+    # breakpoint()
+    missing = indexes - all_in_connections
 
-# Build adjacency list (undirected)
-adj = defaultdict(set)
-for a, b in connections:
-    adj[a].add(b)
-    adj[b].add(a)
+    if len(missing) == 0 & len(groups)==1:
+        break
 
-visited = set()
-circuits = []
-print("starting BFS calculated")
-
-for node in adj:
-    if node not in visited:
-        comp = []
-        q = deque([node])
-        visited.add(node)
-
-        while q:
-            cur = q.popleft()
-            comp.append(cur)
-            for nxt in adj[cur]:
-                if nxt not in visited:
-                    visited.add(nxt)
-                    q.append(nxt)
-
-        circuits.append(sorted(comp))
-
-
-t = sorted([len(x) for x in circuits], reverse=True)[:3]
-print(math.prod(t))
+    print(groups)
 
 breakpoint()
