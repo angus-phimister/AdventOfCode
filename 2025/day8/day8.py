@@ -1,7 +1,7 @@
 from collections import defaultdict, deque
 import math
 
-with open("2025/day8/test.txt") as f:
+with open("2025/day8/input.txt") as f:
     input = [[int(c) for c in x.split(",")] for x in f.read().split('\n')]
 
 def dist(A:list, B:list): 
@@ -102,9 +102,17 @@ while True:
     # breakpoint()
     missing = indexes - all_in_connections
 
-    if len(missing) == 0 & len(groups)==1:
+
+    if len(missing) == 0 and len(groups)==1:
         break
 
-    print(groups)
+    # print(groups)
+    # print(missing)
+    # print(len(groups))
+    print(len(missing))
 
+one = input[last_connection[0]]
+two = input[last_connection[1]]
+
+print(one[0]*two[0])
 breakpoint()
